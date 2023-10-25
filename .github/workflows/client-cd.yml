@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  build_and_deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,6 +25,10 @@ jobs:
           name: client-build
           path: dist/spa
 
+      # deploy:
+      # runs-on: ubuntu-latest
+
+      # steps:
       - name: Pushes to another repository
         uses: cpina/github-action-push-to-another-repository@main
         env:
@@ -36,10 +40,3 @@ jobs:
           user-email: KonstantinSerebryakov2000@gmail.com
           target-branch: main
           target-directory: 'client'
-      # - name: Trigger Server Deployment
-      #   uses: repo-sync/github-action@v2
-      #   with:
-      #     token: ${{ secrets.PAT }} # Personal Access Token with repo scope
-      #     repository: "KonstantinSerebryakov/pyshop-server"
-      #     event_type: deploy-trigger
-      #     client_artifact: ${{ steps.build.outputs.client-build }}
