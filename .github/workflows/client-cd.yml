@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install dependencies
         run: npm install
@@ -20,7 +20,15 @@ jobs:
         run: npm run build
 
       - name: Archive build artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: client-build
           path: dist/spa
+          
+      - name: Trigger Server Deployment
+        uses: repo-sync/github-action@v2
+        with:
+          token: ${{ secrets.PAT }} # Personal Access Token with repo scope
+          repository: KonstantinSerebryakov/pyshop-server
+          event_type: deploy-trigger
+          client_artifact: ${{ steps.build.outputs.client-build }}
