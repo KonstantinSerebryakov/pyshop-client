@@ -29,6 +29,6 @@ jobs:
         uses: repo-sync/github-action@v2
         with:
           token: ${{ secrets.PAT }} # Personal Access Token with repo scope
-          repository: KonstantinSerebryakov/pyshop-server
+          repository: "KonstantinSerebryakov/pyshop-server"
           event_type: deploy-trigger
           client_artifact: ${{ steps.build.outputs.client-build }}
