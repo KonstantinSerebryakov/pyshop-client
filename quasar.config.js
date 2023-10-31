@@ -32,6 +32,10 @@ module.exports = configure(function (/* ctx */) {
     boot: [
       'i18n',
       'axios',
+      'event-bus',
+      'axios-interceptors',
+      'events/router-events',
+      'events/user-store-events',
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
@@ -77,13 +81,17 @@ module.exports = configure(function (/* ctx */) {
       // polyfillModulePreload: true,
       // distDir
 
-      // extendViteConf (viteConf) {},
+      extendViteConf(viteConf) {
+        viteConf.resolve.alias['@app/constants'] = '/src/utils/constants';
+        viteConf.resolve.alias['@app/api'] = '/src/utils/api';
+        viteConf.resolve.alias['@app/interfaces'] = '/src/utils/interfaces';
+      },
       // viteVuePluginOptions: {},
 
       vitePlugins: [
         ['@intlify/vite-plugin-vue-i18n', {
           // if you want to use Vue I18n Legacy API, you need to set `compositionOnly: false`
-          // compositionOnly: false,
+          compositionOnly: false,
 
           // if you want to use named tokens in your Vue I18n messages, such as 'Hello {name}',
           // you need to set `runtimeOnly: false`

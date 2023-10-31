@@ -1,49 +1,52 @@
 <template>
-  <q-page class="row items-center justify-evenly">
-    <example-component
-      title="Example component"
-      active
-      :todos="todos"
-      :meta="meta"
-    ></example-component>
+  <q-page class="q-pt-md">
+    <div class="q-mx-auto" style="max-width: 600px">
+      <q-card class="col-12 q-pa-md">
+        <div class="text-h5">Name</div>
+        <q-input
+          v-model="data.name"
+          label="Name"
+          outlined
+          bottom-slots
+          :error="true"
+          :maxlength="255"
+        >
+          <template v-slot:error>
+            <span class="">
+              {{ 'err' }}
+            </span>
+          </template>
+        </q-input>
+
+        <!--
+          name?: string | null;
+          <q-input></q-input>
+          phone?: string | null;
+          <q-input></q-input> with phone mask
+          address?: string | null;
+          <yandex map + q-input>
+          about?: string | null;
+          <text-area></text-area>
+        -->
+        <q-card-actions>
+          <q-btn label="submit changes"></q-btn>
+          <q-btn label="reset changes"></q-btn>
+          <q-btn label="clear info"></q-btn>
+        </q-card-actions>
+      </q-card>
+    </div>
   </q-page>
 </template>
 
 <script lang="ts">
-import { Todo, Meta } from 'components/models';
-import ExampleComponent from 'components/ExampleComponent.vue';
+import { UserInfoEntity } from 'src/utils/entities';
 import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
   name: 'IndexPage',
-  components: { ExampleComponent },
-  setup () {
-    const todos = ref<Todo[]>([
-      {
-        id: 1,
-        content: 'ct1'
-      },
-      {
-        id: 2,
-        content: 'ct2'
-      },
-      {
-        id: 3,
-        content: 'ct3'
-      },
-      {
-        id: 4,
-        content: 'ct4'
-      },
-      {
-        id: 5,
-        content: 'ct5'
-      }
-    ]);
-    const meta = ref<Meta>({
-      totalCount: 1200
-    });
-    return { todos, meta };
+  setup() {
+    const data = ref(UserInfoEntity.Empty);
+    return { data };
   }
 });
 </script>
