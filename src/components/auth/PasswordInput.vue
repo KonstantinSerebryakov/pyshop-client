@@ -6,7 +6,7 @@
     outlined
     bottom-slots
     :error="isShowError"
-    :maxlength="128"
+    :maxlength="PASSWORD_LENGTH_MAX"
   >
     <template v-slot:error> {{ errorMessage }} </template>
   </q-input>

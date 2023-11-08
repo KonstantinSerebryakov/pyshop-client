@@ -6,7 +6,7 @@
     outlined
     bottom-slots
     :error="isShowError"
-    :maxlength="255"
+    :maxlength="EMAIL_LENGTH_MAX"
   >
     <template v-slot:error>
       <span class="">

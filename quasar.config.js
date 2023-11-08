@@ -36,6 +36,8 @@ module.exports = configure(function (/* ctx */) {
       'axios-interceptors',
       'events/router-events',
       'events/user-store-events',
+      'events/user-info-store-events',
+      'ymaps',
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css

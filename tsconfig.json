@@ -2,10 +2,12 @@
   "extends": "@quasar/app-vite/tsconfig-preset",
   "compilerOptions": {
     "baseUrl": ".",
+    "typeRoots": ["./node_modules/@yandex/ymaps3-types"],
     "paths": {
       "@app/constants": ["src/utils/constants"],
       "@app/api": ["/src/utils/api"],
-      "@app/interfaces": ["/src/utils/interfaces"]
+      "@app/interfaces": ["/src/utils/interfaces"],
+      "ymaps3": ["./node_modules/@yandex/ymaps3-types"]
     }
   }
 }
