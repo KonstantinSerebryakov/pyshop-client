@@ -4,29 +4,27 @@ import { route } from 'quasar/wrappers';
 import { EVENT_AUTH, eventBus } from 'src/boot/event-bus';
 import router from 'src/router';
 import routes from 'src/router/routes';
-import { UserEntity } from 'src/utils/entities';
-import { ILoginResponsePayload, IUser } from 'src/utils/interfaces';
+import { UserEntity, UserInfoEntity } from 'src/utils/entities';
+import { ILoginResponsePayload, IUser, IUserInfo } from 'src/utils/interfaces';
 
-export const useUserStore = defineStore('user', {
+export const useUserInfoStore = defineStore('user_info', {
   state: () => ({
-    data: useLocalStorage('user', null as UserEntity | null, {
+    data: useLocalStorage('user_info', null as UserInfoEntity | null, {
       serializer: {
         read: (v: string) => {
           const parsed = v ? JSON.parse(v) : null;
-          return parsed ? new UserEntity(parsed as IUser) : null;
+          return parsed ? new UserInfoEntity(parsed as IUserInfo) : null;
         },
-        write: (v: UserEntity) => {
-          return JSON.stringify(v as IUser);
+        write: (v: UserInfoEntity) => {
+          return JSON.stringify(v as IUserInfo);
         },
       },
     }),
-    token: useLocalStorage('access_token_jwt', null as string | null, {}),
   }),
   getters: {},
   actions: {
     clear() {
       this.$state.data = null;
-      this.$state.token = null;
     },
   },
 });
