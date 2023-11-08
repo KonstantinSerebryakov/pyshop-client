@@ -38,7 +38,7 @@ watch(countryCode, (newValue, oldValue) => {
 });
 
 const src = computed(() => {
-  let src = 'node_modules/flag-icons/flags/';
+  let src = 'flag-icons/';
   src += props.isSquare ? '1x1' : '4x3';
   src += '/';
   src += isDefaultSrc.value ? 'xx' : countryCode.value;

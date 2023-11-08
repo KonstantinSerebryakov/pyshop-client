@@ -10,7 +10,8 @@
     "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
     "test": "echo \"No test specified\" && exit 0",
     "dev": "quasar dev",
-    "build": "quasar build"
+    "build": "npm run copyFlagIcons && quasar build",
+    "copyFlagIcons": "node -e \"require('fs').cpSync('./node_modules/flag-icons/flags', './public/flag-icons', {recursive: true});\""
   },
   "dependencies": {
     "@quasar/extras": "^1.16.4",

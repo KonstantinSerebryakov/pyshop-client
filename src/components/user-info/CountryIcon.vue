@@ -29,7 +29,7 @@ const countryCode = computed(() => props.code.toLocaleLowerCase());
 // const countryCode = props.code.toLocaleLowerCase();
 
 const src = computed(() => {
-  return `node_modules/flag-icons/flags/${props.isSquare ? '1x1' : '4x3'}/${
+  return `flag-icons/${props.isSquare ? '1x1' : '4x3'}/${
     isUseDefaultSrc.value ? 'xx' : countryCode.value
   }.svg`;
 });
