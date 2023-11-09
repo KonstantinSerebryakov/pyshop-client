@@ -1,10 +1,18 @@
+import { useUserStore } from 'src/stores/user-store';
 import { RouteRecordRaw } from 'vue-router';
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
+    redirect: '/signin',
     children: [{ path: '', component: () => import('pages/IndexPage.vue') }],
+    beforeEnter: (to, from) => {
+      const userStore = useUserStore();
+      const path = `./signin?from=${to.path}`;
+      if (userStore.$state.token) return true;
+      else return path;
+    },
   },
   {
     path: '/signin',

@@ -15,12 +15,8 @@ declare module '@vue/runtime-core' {
 // good idea to move this instance creation inside of the
 // "export default () => {}" function below (which runs individually
 // for each client)
-// const api = axios.create({ baseURL: 'http://127.0.0.1:3333/api' });
-const api = axios.create({
-  baseURL:
-    'https://pyshop-konstantin-serebryakov-8ebd937f65cc.herokuapp.com/#/',
-});
-// const api = axios.create({ baseURL: 'https://api.example.com' });
+const api = axios.create({ baseURL: 'http://127.0.0.1:3333/api' }); // prettier-ignore
+// const api = axios.create({baseURL:'https://pyshop-konstantin-serebryakov-8ebd937f65cc.herokuapp.com/api'}); // prettier-ignore
 
 export default boot(({ app, store }) => {
   const st = useUserStore(store);

@@ -28,38 +28,7 @@ const data = ref('');
 const isShowMessage = ref(false);
 const message = ref('');
 
-watch(data, (newValue, oldValue) => {
-  console.log(newValue);
-  message.value = '';
-  isShowMessage.value = false;
-});
-
-function showMessage(): void {
-  isShowMessage.value = true;
-}
-function showClearedMessage(): void {
-  message.value = 'data has been cleared';
-  showMessage();
-}
-
-function validate(): boolean {
-  const isNotValid = !isValid.value;
-  if (isNotValid) showMessage();
-  return !isNotValid;
-}
-
-function getValueString(): string {
-  return data.value.toLowerCase().trim();
-}
-
-const isValid = computed((): boolean => {
-  const inputString = getValueString();
-  return inputString.length < USERNAME_LENGTH_MAX;
-});
-
 defineExpose({
-  validate,
-  value: readonly(data),
-  showClearedMessage
+  value: readonly(data)
 });
 </script>

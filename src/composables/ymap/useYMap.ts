@@ -46,10 +46,9 @@ export async function useYMap(htmlElement: HTMLElement) {
         const x = position[0];
         const y = position[1];
         emitter.emit(EVENT_MAP.CENTER_CHANGED, [x, y]);
-        // geocode.getAddress([x, y]).then((address) => {
-        //   emitter.emit('address_fetched', address);
-        // });
-        // map.setLocation({ zoom: 17 });
+        map.setLocation({
+          zoom: 18,
+        });
       },
     });
     controls.addChild(geolocationControl);
@@ -172,9 +171,6 @@ export async function useYMap(htmlElement: HTMLElement) {
       search.searchAddress(coords).then((address) => {
         emitter.emit(EVENT_MAP.ADDRESS_FETCHED, address);
       });
-      // geocode.getAddress([x, y]).then((address) => {
-      //   emitter.emit(EVENT_MAP.ADDRESS_FETCHED, address);
-      // });
     });
     emitter.on(EVENT_MAP.ADDRESS_CHANGED, (data: unknown) => {
       const address = data as string;
@@ -182,15 +178,9 @@ export async function useYMap(htmlElement: HTMLElement) {
         const coords = data as [number, number];
         map.setLocation({
           center: [coords[0], coords[1]],
-          zoom: 14,
+          zoom: 16,
         });
       });
-      // geocode.getCoordinates(address).then((coords) => {
-      //   map.setLocation({
-      //     center: [coords[0], coords[1]],
-      //     zoom: 14;
-      //   });
-      // });
     });
     emitter.on('destroy', () => {
       map.destroy();

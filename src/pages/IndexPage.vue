@@ -1,5 +1,5 @@
 <template>
-  <q-page class="q-pt-md">
+  <q-page class="q-pt-md q-pb-md">
     <div class="q-mx-auto" style="max-width: 600px">
       <q-card class="col-12 q-pa-md">
         <div class="text-h5">Name</div>
@@ -10,17 +10,11 @@
         <address-input></address-input>
         <div class="text-h5">About</div>
         <about-input></about-input>
-
-        <!--
-          address?: string | null;
-          <yandex map + q-input>
-          about?: string | null;
-          <text-area></text-area>
-        -->
         <q-card-actions>
-          <q-btn label="submit changes"></q-btn>
-          <q-btn label="reset changes"></q-btn>
-          <q-btn label="clear info"></q-btn>
+          <q-space></q-space>
+          <q-btn label="submit" class=""></q-btn>
+          <q-btn label="undo" class=""></q-btn>
+          <q-btn label="delete" class="bg-negative"></q-btn>
         </q-card-actions>
       </q-card>
     </div>

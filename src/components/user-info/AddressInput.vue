@@ -43,7 +43,6 @@ const isShowMap = ref(false);
 
 function handlePickAddressEvent(payload: unknown) {
   const address = payload as string;
-  console.log(address);
   data.value = address;
 }
 
