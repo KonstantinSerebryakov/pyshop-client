@@ -8,6 +8,7 @@
       "@app/api": ["/src/utils/api"],
       "@app/interfaces": ["/src/utils/interfaces"],
       "ymaps3": ["./node_modules/@yandex/ymaps3-types"]
-    }
+    },
+    "lib": ["dom.iterable", "es2019"]
   }
 }

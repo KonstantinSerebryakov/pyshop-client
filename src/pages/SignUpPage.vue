@@ -33,11 +33,10 @@
 </template>
 
 <script setup lang="ts">
-import { QBtn } from 'quasar';
-import App from 'src/App.vue';
+import { Notify, QBtn } from 'quasar';
 import EmailInput from 'src/components/auth/EmailInput.vue';
 import PasswordInput from 'src/components/auth/PasswordInput.vue';
-import { AuthApi } from 'src/utils/api/Auth.api';
+import { AuthApi } from 'src/utils/api/auth.api';
 import { ILoginQueryPayload } from 'src/utils/interfaces';
 import { getCurrentInstance, onMounted, onUnmounted, ref } from 'vue';
 
@@ -83,6 +82,11 @@ async function handleSubmit(event: SubmitEvent | Event) {
 }
 
 async function handleSignUpSuccess(data: ILoginQueryPayload) {
+  Notify.create({
+    type: 'info',
+    message: 'User successfully created.'
+  });
+  // OR navigate to signin
   AuthApi.login(data);
 }
 
@@ -99,3 +103,4 @@ onUnmounted(() => {
 });
 </script>
 <style scoped></style>
+src/utils/api/auth.api

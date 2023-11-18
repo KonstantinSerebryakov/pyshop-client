@@ -13,7 +13,6 @@ export default defineComponent({
   name: 'AuthLayout',
   components: {},
   setup(props, ctx) {
-    console.log(ctx);
     return {};
   },
   methods: {},

@@ -11,8 +11,11 @@
     <template v-slot:error>
       <span class="">
         {{ errorMessage }}
-        <router-link v-if="isShowCustomError" to="/signin" class="text-purple"
-          >Sign In</router-link
+        <router-link
+          v-if="isShowCustomError"
+          :to="customError.to"
+          class="text-purple"
+          >{{ customError.label }}</router-link
         >
       </span>
     </template>
@@ -30,7 +33,7 @@ import {
 const data = ref('');
 const isShowError = ref(false);
 const isShowCustomError = ref(false);
-const customError = ref('');
+const customError = ref({ message: '', to: '/', label: '/' });
 
 watch(data, (newValue, oldValue) => {
   isShowError.value = newValue.length > 0 && !isValid.value;
@@ -41,13 +44,17 @@ function showError(): void {
 }
 function showEmailBusyError(): void {
   isShowCustomError.value = true;
-  customError.value = 'This email is busy. try another or ';
+  customError.value.message = 'This email is busy. try another or ';
+  customError.value.to = '/signin';
+  customError.value.label = 'Sign In';
   showError();
 }
-function showEmailNotFoundError(): void {
+function showEmailInvalidError(): void {
   isShowCustomError.value = true;
-  // customError.value = 'No user related to given email. Navigate to ';
-  customError.value = 'Email or password are invalid';
+  // customError.value.message = 'No user related to given email. Navigate to ';
+  customError.value.message = 'Email or password are invalid. New user? ';
+  customError.value.to = '/signup';
+  customError.value.label = 'Sign Up';
   showError();
 }
 
@@ -78,7 +85,7 @@ const errorMessage = computed(() => {
   } else if (value.length > EMAIL_LENGTH_MAX) {
     message = `Email should not be longer then ${EMAIL_LENGTH_MAX} symbols`;
   } else if (isShowCustomError.value) {
-    message = customError.value;
+    message = customError.value.message;
   }
 
   return message;
@@ -87,6 +94,6 @@ defineExpose({
   validate,
   value: readonly(data),
   showEmailBusyError,
-  showEmailNotFoundError
+  showEmailInvalidError: showEmailInvalidError
 });
 </script>

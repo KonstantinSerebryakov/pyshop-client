@@ -146,8 +146,8 @@ export class GeocodeApi {
         if (data) {
           const features = data.response.GeoObjectCollection.featureMember;
           if (features.length < 1) return null;
+          // console.log(features);
           const mostRelevantData = features[0].GeoObject;
-          console.log(mostRelevantData.metaDataProperty.GeocoderMetaData.text);
           return mostRelevantData;
         }
       })

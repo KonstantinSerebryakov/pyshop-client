@@ -1,8 +1,20 @@
 import { IUser } from '../accounts/user.interface';
 
+export interface IToken {
+  token: string;
+  exp: number;
+  iat: number;
+}
+
 export interface ILoginResponsePayload {
   user: IUser;
-  token: string;
+  access_token: Omit<IToken, 'iat'>;
+  refresh_token: Omit<IToken, 'iat'>;
+}
+
+export interface IRefreshTokensResponsePayload {
+  access_token: IToken;
+  refresh_token: IToken;
 }
 
 export interface IRegisterResponsePayload {

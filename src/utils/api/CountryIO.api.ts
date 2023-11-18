@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from 'axios';
 import {
   URL_COUNTRYIO_NAMES,
   URL_COUNTRYIO_PHONECODES,
-} from '../constants/Api';
+} from '../constants/api.constants';
 import { CountryData as ICountryData } from '../interfaces/country.io/Data.interface';
 import { fullJoinArraysFilterEmpty } from '../utility/utility';
 

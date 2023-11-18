@@ -6,29 +6,36 @@
     :autogrow="true"
     outlined
     bottom-slots
-    :error="isShowMessage"
     :maxlength="2600"
     input-style="max-height: 60vh; min-height: 100px"
+    name="about"
   >
-    <template v-slot:error>
-      <div>
-        <span class="text-dark">
-          {{ message }}
-        </span>
-      </div>
-    </template>
   </q-input>
 </template>
 
 <script setup lang="ts">
+import { ABOUT_LENGTH_MAX } from '@app/constants';
 import { computed, readonly, ref, watch } from 'vue';
-import { USERNAME_LENGTH_MAX } from '@app/constants';
 
 const data = ref('');
-const isShowMessage = ref(false);
-const message = ref('');
+const isValid = ref(true);
 
+function validate(): boolean {
+  const inputString = data.value;
+  isValid.value = inputString.length <= ABOUT_LENGTH_MAX;
+  return isValid.value;
+}
+
+function setValue(value: string) {
+  data.value = value;
+}
+function clearValue() {
+  data.value = '';
+}
 defineExpose({
-  value: readonly(data)
+  validate,
+  value: readonly(data),
+  setValue: setValue,
+  clearValue: clearValue
 });
 </script>

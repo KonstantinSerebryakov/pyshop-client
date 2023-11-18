@@ -40,7 +40,7 @@
         </q-item>
       </q-list>
     </div>
-    <div class="col-12 text-black" color="black">
+    <div class="col-12 text-black text-weight-bold text-h6" color="black">
       <span class="float-right">
         &copy;Created by Konstantin Serebryakov
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span

@@ -1,7 +1,6 @@
 <template>
-  <q-card class="bordered">
-    <q-card-section class="q-pa-none">
-      <!-- <q-form @submit="console.log(12322222)"> -->
+  <q-card class="bordered column" style="height: 400px; max-height: 80vh">
+    <q-card-section class="q-pa-none col-auto full-width">
       <q-input
         v-model="address"
         label="Address"
@@ -24,13 +23,9 @@
           </q-btn>
         </template>
       </q-input>
-      <!-- </q-form> -->
     </q-card-section>
-    <q-card-section class="q-pa-none">
-      <div
-        ref="mapRef"
-        style="width: 100%; height: 400px; max-height: 80vh"
-      ></div>
+    <q-card-section class="q-pa-none col full-width">
+      <div ref="mapRef" class="full-height"></div>
     </q-card-section>
   </q-card>
 </template>
@@ -42,6 +37,13 @@ import { EVENT_USER_INFO_STORE, eventBus } from 'src/boot/event-bus';
 const mapRef = ref(null as null | HTMLElement);
 const address = ref('');
 const mapEmitter = ref(null as null | Emitter<Record<EventType, unknown>>);
+const emit = defineEmits(['picked']);
+
+const props = defineProps({
+  defaultValue: {
+    type: String
+  }
+});
 
 function searchAddress() {
   mapEmitter.value?.emit(EVENT_MAP.ADDRESS_CHANGED, address.value);
@@ -50,7 +52,7 @@ function searchAddress() {
 onMounted(() => {
   if (mapRef.value) {
     const htmlElement: HTMLElement = mapRef.value;
-    useYMap(htmlElement)
+    useYMap(htmlElement, props.defaultValue)
       .then((payload) => {
         const emitter = payload.emitter;
         mapEmitter.value = emitter;
@@ -65,7 +67,7 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-  eventBus.emit(EVENT_USER_INFO_STORE.ADDRESS_PICKED, address.value);
+  emit('picked', address.value);
 });
 onUnmounted(() => {
   mapEmitter.value?.emit('destroy');

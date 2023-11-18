@@ -4,12 +4,12 @@ import {
   IYandexGeocodeResponseFeature,
 } from 'src/utils/api/Geocode.api';
 
-export async function useGecode() {
+export async function useGecode(defaultLocation = '') {
   const api = new GeocodeApi();
   let _address = (() => {
     const timeZone = useCountryTimeZoneComposable();
     const name = timeZone.getName();
-    // TODO: EXTRACT LOCATION FROM PINIA and use it instead fetch default
+    if (defaultLocation.length > 0) return defaultLocation;
     return name ?? 'London';
   })();
   const _coords = await (async () => {

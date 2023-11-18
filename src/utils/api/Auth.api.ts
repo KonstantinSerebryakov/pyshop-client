@@ -1,8 +1,9 @@
 import { AxiosError } from 'axios';
 import { Notify } from 'quasar';
 import { api } from 'src/boot/axios';
-import { URL_SIGNIN, URL_SIGNUP } from '@app/constants';
+import { URL_PARAM_IS_PUBLIC, URL_SIGNIN, URL_SIGNUP } from '@app/constants';
 import { EVENT_AUTH, eventBus } from 'src/boot/event-bus';
+import { useUserStore } from 'src/stores/user-store';
 
 export class AuthApi {
   static async register(payload: { email: string; password: string }) {
@@ -14,7 +15,10 @@ export class AuthApi {
     };
 
     const axiosPromise = api
-      .post(URL, payload, { signal: controller.signal })
+      .post(URL, payload, {
+        signal: controller.signal,
+        params: { [URL_PARAM_IS_PUBLIC]: true },
+      })
       .then((response) => {
         const status = response.status;
         const data = response.data;
@@ -34,6 +38,11 @@ export class AuthApi {
     return { promise: axiosPromise, cancel: cancel };
   }
 
+  private static extractDeviceId() {
+    const userStore = useUserStore();
+    return userStore.$state.deviceId;
+  }
+
   static async login(payload: { email: string; password: string }) {
     const URL = URL_SIGNIN;
 
@@ -43,7 +52,11 @@ export class AuthApi {
     };
 
     const axiosPromise = api
-      .post(URL, payload, { signal: controller.signal })
+      .post(
+        URL,
+        { ...payload, deviceId: this.extractDeviceId() },
+        { signal: controller.signal, params: { [URL_PARAM_IS_PUBLIC]: true } }
+      )
       .then((response) => {
         const status = response.status;
         const data = response.data;

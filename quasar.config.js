@@ -33,10 +33,10 @@ module.exports = configure(function (/* ctx */) {
       'i18n',
       'axios',
       'event-bus',
-      'axios-interceptors',
       'events/router-events',
       'events/user-store-events',
       'events/user-info-store-events',
+      'axios-interceptors',
       'ymaps',
     ],
 
@@ -65,6 +65,10 @@ module.exports = configure(function (/* ctx */) {
         browser: ['es2019', 'edge88', 'firefox78', 'chrome87', 'safari13.1'],
         node: 'node16'
       },
+
+      // this is a configuration passed on to the underlying Webpack.
+      // No need to set this if you are using vite.
+      devtool: 'source-map',
 
       // vueRouterMode: 'history', // available values: 'hash', 'history'
       vueRouterMode: 'hash', // available values: 'hash', 'history'
@@ -113,7 +117,11 @@ module.exports = configure(function (/* ctx */) {
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
     framework: {
-      config: {},
+      config: {
+        notify: {
+          type: 'info',
+        }
+      },
 
       // iconSet: 'material-icons', // Quasar icon set
       // lang: 'en-US', // Quasar language pack
@@ -126,8 +134,44 @@ module.exports = configure(function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: []
+      plugins: ['Notify',]
     },
+
+    plugins: {
+      Notify: {
+        errorNotify: (message) => {
+          this.$q.notify({
+            type: 'negative',
+            message: 'message'
+          });
+        },
+        successNotify: (message) => {
+          this.$q.notify({
+            type: 'positive',
+            message: 'message'
+          });
+        },
+        warningNotify: (message) => {
+          this.$q.notify({
+            type: 'warning',
+            message: 'message'
+          });
+        },
+        infoNotify: (message) => {
+          this.$q.notify({
+            type: 'info',
+            message: 'message'
+          });
+        },
+        ongoingNotify: (message) => {
+          this.$q.notify({
+            type: 'ongoing',
+            message: 'message'
+          });
+        },
+      },
+    },
+
 
     // animations: 'all', // --- includes all animations
     // https://v2.quasar.dev/options/animations

@@ -17,11 +17,11 @@ export enum EVENT_MAP {
   ADDRESS_CHANGED = 'ADDRESS_CHANGED',
 }
 
-export async function useYMap(htmlElement: HTMLElement) {
+export async function useYMap(htmlElement: HTMLElement, defaultLocation = '') {
   await scriptLoaded;
   await ymaps3.ready;
   const emitter = mitt();
-  const geocode = await useGecode();
+  const geocode = await useGecode(defaultLocation);
   const search = await useSearch();
   const centerMarker = await getCenterMarker();
 

@@ -1,8 +1,10 @@
+import { Feature } from '@yandex/ymaps3-types';
+
 export async function useSearch() {
   await ymaps3.ready;
   const isNotFirstCall = true;
   let _address = '';
-  let _coords = [0, 0];
+  let _coords = [0, 0] as [number, number];
 
   async function searchAddress(coords?: [number, number]) {
     if (!coords) return _address;
@@ -24,7 +26,10 @@ export async function useSearch() {
     if (!address) return _coords;
     if (isNotFirstCall && _address === address) return [..._coords];
     return ymaps3.search({ text: address }).then((data) => {
-      const firstNode = data[0];
+      if (!data || data.length < 1) {
+        return [..._coords];
+      }
+      const firstNode = data[0] as Feature;
       const geometry = firstNode.geometry;
       const coords = geometry?.coordinates;
       if (!coords) return _coords;

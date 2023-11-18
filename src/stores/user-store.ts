@@ -1,11 +1,15 @@
 import { useLocalStorage } from '@vueuse/core';
+import { DeviceUUID } from 'device-uuid';
 import { defineStore } from 'pinia';
-import { route } from 'quasar/wrappers';
-import { EVENT_AUTH, eventBus } from 'src/boot/event-bus';
-import router from 'src/router';
-import routes from 'src/router/routes';
 import { UserEntity } from 'src/utils/entities';
-import { ILoginResponsePayload, IUser } from 'src/utils/interfaces';
+import { IToken, IUser } from 'src/utils/interfaces';
+import { v4 as getUuidv4 } from 'uuid';
+import { watch } from 'vue';
+
+enum STATE_STORE {
+  INITIAL = 'INITIAL',
+  LOADED = 'LOADED',
+}
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -15,18 +19,47 @@ export const useUserStore = defineStore('user', {
           const parsed = v ? JSON.parse(v) : null;
           return parsed ? new UserEntity(parsed as IUser) : null;
         },
-        write: (v: UserEntity) => {
-          return JSON.stringify(v as IUser);
+        write: (v: UserEntity | null) => {
+          return v ? JSON.stringify(v as IUser) : '';
         },
       },
     }),
-    token: useLocalStorage('access_token_jwt', null as string | null, {}),
+    accessToken: useLocalStorage('access_token_jwt', null as IToken | null, {
+      serializer: {
+        read: (v: string) => {
+          const parsed = v ? JSON.parse(v) : null;
+          return parsed ? (parsed as IToken | null) : null;
+        },
+        write: (v: IToken | null) => {
+          return v ? JSON.stringify(v) : '';
+        },
+      },
+    }),
+    refreshToken: useLocalStorage('refresh_token_jwt', null as IToken | null, {
+      serializer: {
+        read: (v: string) => {
+          const parsed = v ? JSON.parse(v) : null;
+          return parsed ? (parsed as IToken | null) : null;
+        },
+        write: (v: IToken | null) => {
+          return v ? JSON.stringify(v) : '';
+        },
+      },
+    }),
+    deviceId: useLocalStorage('deviceId', getUuidv4().toString() as string, {}),
   }),
   getters: {},
   actions: {
     clear() {
       this.$state.data = null;
-      this.$state.token = null;
+      this.clearRefreshToken();
+      this.clearAccessToken();
+    },
+    clearRefreshToken() {
+      this.$state.refreshToken = null;
+    },
+    clearAccessToken() {
+      this.$state.accessToken = null;
     },
   },
 });

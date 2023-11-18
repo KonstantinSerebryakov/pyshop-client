@@ -2,14 +2,14 @@
   <q-select
     menu-anchor="bottom left"
     menu-self="top left"
-    square
+    :square="false"
     :outlined="true"
     standout="bg-grey text-lg"
     :stack-label="false"
     :fill-input="true"
     :hide-bottom-space="true"
     color="primary"
-    class="non-selectable ellipsis no-outline bg-grey-3"
+    class="non-selectable ellipsis no-outline bg-grey-3 q-mx-none"
     popup-content-style="height=16em; max-height=80vh; width: 200px"
     popup-content-class="text-bold non-selectable"
     v-model="selectedRef"
@@ -43,6 +43,7 @@ import { computed, onBeforeMount, readonly, ref, watch } from 'vue';
 import { getCountries } from 'libphonenumber-js';
 import { QSelect } from 'quasar';
 import { useCountryTimeZoneComposable } from '../../composables/useTimeZoneComposable';
+import { CountryCode } from 'countries-and-timezones';
 
 const props = defineProps({
   code: {
@@ -80,8 +81,12 @@ onBeforeMount(() => {
   selectedRef.value = timeZone.getIso2Code() ?? '';
 });
 
+function select(code: CountryCode) {
+  selectedRef.value = code;
+}
 defineExpose({
-  selected: readonly(selectedRef)
+  selected: readonly(selectedRef),
+  select: select
 });
 </script>
 <style scoped></style>

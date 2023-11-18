@@ -33,9 +33,10 @@
 </template>
 
 <script setup lang="ts">
+import { Notify, QNotifyUpdateOptions } from 'quasar';
 import EmailInput from 'src/components/auth/EmailInput.vue';
 import PasswordInput from 'src/components/auth/PasswordInput.vue';
-import { AuthApi } from 'src/utils/api/Auth.api';
+import { AuthApi } from 'src/utils/api/auth.api';
 import { getCurrentInstance, onUnmounted, ref } from 'vue';
 
 const instance = getCurrentInstance();
@@ -44,6 +45,10 @@ const globalProperties = instance?.appContext.config.globalProperties;
 const emailInputRef = ref(null as InstanceType<typeof EmailInput> | null);
 const passwordInputRef = ref(null as InstanceType<typeof PasswordInput> | null);
 const cancelSubmit = ref(null as (() => void) | null);
+
+const dismissNotify = ref(
+  null as null | ((props?: QNotifyUpdateOptions) => void)
+);
 
 function validate() {
   let isValid = true;
@@ -62,6 +67,13 @@ function getFormData() {
 async function handleSubmit(event: SubmitEvent | Event) {
   event.preventDefault();
   handleCancel();
+  dismissNotify.value = Notify.create({
+    type: 'info',
+    spinner: true,
+    message: 'Authorizing...',
+    position: 'top',
+    timeout: 0 // Set timeout to 0 for an indefinite loading notification
+  });
 
   if (!validate()) return;
 
@@ -69,16 +81,21 @@ async function handleSubmit(event: SubmitEvent | Event) {
   const axiosPair = await AuthApi.login(data);
   cancelSubmit.value = axiosPair.cancel;
   axiosPair.promise.then((response) => {
+    const dismiss = dismissNotify.value;
+    if (dismiss) dismiss();
     if (!response) return;
     const status = response.status;
+    // Test123@mail.ru
     if (status === 404 || status === 401) {
-      emailInputRef.value?.showEmailNotFoundError();
+      emailInputRef.value?.showEmailInvalidError();
       passwordInputRef.value?.showInvalidPasswordError();
     }
   });
 }
 
 function handleCancel() {
+  const dismiss = dismissNotify.value;
+  if (dismiss) dismiss();
   const cancel = cancelSubmit.value;
   if (cancel !== null) {
     cancel();
@@ -91,3 +108,4 @@ onUnmounted(() => {
 });
 </script>
 <style scoped></style>
+src/utils/api/auth.api
