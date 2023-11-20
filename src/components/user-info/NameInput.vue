@@ -13,9 +13,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, readonly, ref, watch } from 'vue';
+import { computed, ref } from 'vue';
 import { USERNAME_LENGTH_MAX } from '@app/constants';
-import { useUserInfoStore } from 'src/stores/user-info-store';
 
 const data = ref(null as null | string);
 const isValid = ref(true);

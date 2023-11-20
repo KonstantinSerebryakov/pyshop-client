@@ -3,13 +3,7 @@ import { DeviceUUID } from 'device-uuid';
 import { defineStore } from 'pinia';
 import { UserEntity } from 'src/utils/entities';
 import { IToken, IUser } from 'src/utils/interfaces';
-import { v4 as getUuidv4 } from 'uuid';
-import { watch } from 'vue';
-
-enum STATE_STORE {
-  INITIAL = 'INITIAL',
-  LOADED = 'LOADED',
-}
+// import { v4 as getUuidv4 } from 'uuid';
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -46,7 +40,12 @@ export const useUserStore = defineStore('user', {
         },
       },
     }),
-    deviceId: useLocalStorage('deviceId', getUuidv4().toString() as string, {}),
+    // deviceId: useLocalStorage('deviceId', getUuidv4().toString() as string, {}),
+    deviceId: useLocalStorage(
+      'deviceId',
+      new DeviceUUID().toString() as string,
+      {}
+    ),
   }),
   getters: {},
   actions: {

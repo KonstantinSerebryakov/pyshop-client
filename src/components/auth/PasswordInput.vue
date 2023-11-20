@@ -5,57 +5,32 @@
     type="password"
     outlined
     bottom-slots
-    :error="isShowError"
+    :error="isShowInputMessage"
     :maxlength="PASSWORD_LENGTH_MAX"
   >
-    <template v-slot:error> {{ errorMessage }} </template>
+    <template v-slot:error> {{ inputMessage }} </template>
   </q-input>
 </template>
 
 <script setup lang="ts">
-import { computed, readonly, ref, watch } from 'vue';
+import { computed, onMounted, readonly, ref, watch } from 'vue';
 import {
   PASSWORD_LENGTH_MAX,
   PASSWORD_LENGTH_MIN,
   PASSWORD_REGEXP
 } from '@app/constants';
+import { useInputMessage } from 'src/utils/composables/useInputMessage';
+
+const inputMessageComposabe = useInputMessage();
+function setInputMessage(message: string) {
+  inputMessageComposabe.message.value = message;
+}
+const isShowInputMessage = inputMessageComposabe.isShowMessage;
+const inputMessage = inputMessageComposabe.message;
 
 const data = ref('');
-const isShowError = ref(false);
-const isShowCustomError = ref(false);
-const customError = ref('');
 
-watch(data, (newValue, oldValue) => {
-  isShowError.value = newValue.length > 0 && !isValid.value;
-});
-
-function showError(): void {
-  isShowError.value = true;
-}
-function showInvalidPasswordError(): void {
-  isShowCustomError.value = true;
-  customError.value = 'Email or password are invalid';
-  showError();
-}
-
-function validate(): boolean {
-  const isNotValid = !isValid.value;
-  if (isNotValid) showError();
-  return !isNotValid;
-}
-
-function getValueString(): string {
-  return data.value.toLowerCase().trim();
-}
-
-const isValid = computed((): boolean => {
-  const inputString = getValueString();
-  return PASSWORD_REGEXP.test(inputString);
-});
-
-const errorMessage = computed(() => {
-  if (!isShowError.value) return '';
-
+function setErrorMessageValidation() {
   let message = '';
   const value = data.value;
   if (value.length === 0) {
@@ -70,11 +45,43 @@ const errorMessage = computed(() => {
     message = 'Password should include at least 1 special symbol: @$!%*#?&';
   } else if (value.length > PASSWORD_LENGTH_MAX) {
     message = `Password should not be longer then ${PASSWORD_LENGTH_MAX} symbols`;
-  } else if (isShowCustomError.value) {
-    message = customError.value;
   }
+  setInputMessage(message);
+}
+function setErrorMessageInvalidPassword() {
+  setInputMessage('Email or password are invalid.');
+}
 
-  return message;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+watch(data, (newValue, oldValue) => {
+  if (newValue.length > 0 && !isValid.value) {
+    setErrorMessageValidation();
+    inputMessageComposabe.show();
+  } else {
+    inputMessageComposabe.hide();
+  }
+});
+
+function showError(): void {
+  inputMessageComposabe.show();
+}
+function showInvalidPasswordError(): void {
+  setErrorMessageInvalidPassword();
+  showError();
+}
+
+function validate(): boolean {
+  const valid = isValid.value;
+  if (!valid) showError();
+  return valid;
+}
+const isValid = computed((): boolean => {
+  const inputString = data.value.toLowerCase().trim();
+  return PASSWORD_REGEXP.test(inputString);
+});
+
+onMounted(() => {
+  setErrorMessageValidation();
 });
 
 defineExpose({

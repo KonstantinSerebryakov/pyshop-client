@@ -1,4 +1,5 @@
 import { Feature } from '@yandex/ymaps3-types';
+import { debounce } from 'quasar';
 
 export async function useSearch() {
   await ymaps3.ready;
@@ -40,5 +41,10 @@ export async function useSearch() {
       return [x, y];
     });
   }
+
+  // return {
+  //   searchAddress: debounce(searchAddress, 300),
+  //   searchCoords: debounce(searchCoords, 300),
+  // };
   return { searchAddress, searchCoords };
 }

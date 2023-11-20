@@ -81,7 +81,7 @@ export default boot(({ app, store }) => {
           const status = response?.status;
           if (status && status === 401) {
             tokensService.refreshTokens();
-            return null;
+            // return null;
           }
         }
         return Promise.reject(error);

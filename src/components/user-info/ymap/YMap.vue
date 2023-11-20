@@ -31,12 +31,12 @@
 </template>
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, onUnmounted, readonly, ref } from 'vue';
-import { Emitter, EventType } from 'mitt';
-import { EVENT_MAP, useYMap } from '../../composables/ymap/useYMap';
-import { EVENT_USER_INFO_STORE, eventBus } from 'src/boot/event-bus';
+import { Emitter } from 'mitt';
+import { EVENT_YMAP, EventsYMap, useYMap } from './useYMap';
+
 const mapRef = ref(null as null | HTMLElement);
 const address = ref('');
-const mapEmitter = ref(null as null | Emitter<Record<EventType, unknown>>);
+const mapEmitter = ref(null as null | Emitter<EventsYMap>);
 const emit = defineEmits(['picked']);
 
 const props = defineProps({
@@ -46,7 +46,7 @@ const props = defineProps({
 });
 
 function searchAddress() {
-  mapEmitter.value?.emit(EVENT_MAP.ADDRESS_CHANGED, address.value);
+  mapEmitter.value?.emit(EVENT_YMAP.ADDRESS_CHANGED, address.value);
 }
 
 onMounted(() => {
@@ -59,18 +59,17 @@ onMounted(() => {
         return emitter;
       })
       .then((emitter) => {
-        emitter.on(EVENT_MAP.ADDRESS_FETCHED, (data) => {
+        emitter.on(EVENT_YMAP.ADDRESS_FETCHED, (data) => {
           address.value = data as string;
         });
       });
   }
 });
-
 onBeforeUnmount(() => {
   emit('picked', address.value);
 });
 onUnmounted(() => {
-  mapEmitter.value?.emit('destroy');
+  mapEmitter.value?.emit(EVENT_YMAP.DESTROY);
 });
 defineExpose({ address: readonly(address) });
 </script>

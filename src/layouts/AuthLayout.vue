@@ -12,13 +12,14 @@ import { defineComponent } from 'vue';
 export default defineComponent({
   name: 'AuthLayout',
   components: {},
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   setup(props, ctx) {
     return {};
   },
   methods: {},
   mounted() {
     console.log(this.$q.screen.gt);
-  },
+  }
 });
 </script>
 <style scoped></style>

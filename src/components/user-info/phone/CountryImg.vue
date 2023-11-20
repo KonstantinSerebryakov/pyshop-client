@@ -27,12 +27,13 @@ const props = defineProps({
 const isDefaultSrc = ref(false);
 
 function setDefaultSrc(e: unknown) {
-  // const event = e as Event;
-  // const img = event.target as HTMLImageElement;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const typeError = e as Error;
   isDefaultSrc.value = true;
 }
 
 const countryCode = computed(() => props.code.toLocaleLowerCase());
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 watch(countryCode, (newValue, oldValue) => {
   isDefaultSrc.value = false;
 });

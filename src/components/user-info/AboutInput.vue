@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import { ABOUT_LENGTH_MAX } from '@app/constants';
-import { computed, readonly, ref, watch } from 'vue';
+import { readonly, ref } from 'vue';
 
 const data = ref('');
 const isValid = ref(true);

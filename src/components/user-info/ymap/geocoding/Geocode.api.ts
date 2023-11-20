@@ -1,71 +1,10 @@
-import axios, { AxiosInstance } from 'axios';
-import { API_KEY } from '../../composables/ymap/constants';
-
-interface IYandexGeocodeQueryOptions {
-  apikey: string;
-  geocode: string;
-  sco?: string;
-  kind?: string;
-  rspn?: boolean;
-  ll?: [number, number];
-  spn?: [number, number];
-  bbox?: [[number, number], [number, number]]; // [[x1, y1], [x2, y2]]
-  results?: number;
-  skip?: number;
-  lang?: string;
-  callback?: string;
-  uri?: string;
-}
-
-export interface IYandexGeocodeResponseFeature {
-  metaDataProperty: {
-    GeocoderMetaData: {
-      kind: string;
-      precision: string;
-      text: string;
-      Address: {
-        country_code: string;
-        formatted: string;
-        Components: {
-          kind: string;
-          name: string;
-        }[];
-      };
-    };
-  };
-  name: string;
-  description: string;
-  boundedBy: {
-    Envelope: {
-      lowerCorner: string;
-      upperCorner: string;
-    };
-  };
-  uri: string;
-  Point: {
-    pos: string;
-  };
-}
-
-interface IYandexGeocodeResponse {
-  response: {
-    GeoObjectCollection: {
-      metaDataProperty: {
-        GeocoderResponseMetaData: {
-          fix?: string;
-          request: string;
-          suggest?: string;
-          found: number;
-          results: number;
-          skip?: number;
-        };
-      };
-      featureMember: {
-        GeoObject: IYandexGeocodeResponseFeature;
-      }[];
-    };
-  };
-}
+import axios from 'axios';
+import { YANDEX_API_KEY } from '../constants';
+import {
+  IYandexGeocodeQueryOptions,
+  IYandexGeocodeResponse,
+  IYandexGeocodeResponseFeature,
+} from './geocode.interface';
 
 export class GeocodeApi {
   private static api = axios.create({
@@ -102,7 +41,7 @@ export class GeocodeApi {
     const baseUrl = '';
     const queryParams = new URLSearchParams();
 
-    queryParams.append('apikey', API_KEY);
+    queryParams.append('apikey', YANDEX_API_KEY);
     queryParams.append('geocode', options.geocode);
 
     if (options.sco) queryParams.append('sco', options.sco);
@@ -146,14 +85,12 @@ export class GeocodeApi {
         if (data) {
           const features = data.response.GeoObjectCollection.featureMember;
           if (features.length < 1) return null;
-          // console.log(features);
           const mostRelevantData = features[0].GeoObject;
           return mostRelevantData;
         }
       })
       .catch((error) => {
-        const response = error.response;
-        console.error(response.status + ': ' + response.data);
+        console.error(`YandexGeocoder error: ${error.toString()}`);
       });
     return { promise: axiosPromise, cancel: cancel };
   }
