@@ -20,7 +20,6 @@ function extractBaseUrl() {
   if (env === 'development') {
     return 'http://127.0.0.1:3333/api';
   }
-  return env;
   if (env === 'production') {
     return 'https://pyshop-konstantin-serebryakov-8ebd937f65cc.herokuapp.com/api';
   }
