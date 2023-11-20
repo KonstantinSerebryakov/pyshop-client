@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
-export function debounce<RET, ARGS extends unknown[]>(
+export function throttle<RET, ARGS extends unknown[]>(
   fn: (...args: ARGS) => RET,
   delay: number
 ): (...args: ARGS) => RET | undefined {

@@ -36,7 +36,7 @@
 import { Notify, QNotifyUpdateOptions } from 'quasar';
 import EmailInput from 'src/components/auth/EmailInput.vue';
 import PasswordInput from 'src/components/auth/PasswordInput.vue';
-import { AuthApi } from 'src/utils/api/auth-api';
+import { AuthApi } from 'src/utils/api/auth.api';
 import { throttle } from 'src/utils/utility/throttle';
 import { onUnmounted, ref } from 'vue';
 
@@ -108,4 +108,4 @@ onUnmounted(() => {
 });
 </script>
 <style scoped></style>
-src/utils/api/auth.api src/utils/api/auth-api
+src/utils/api/auth.api
