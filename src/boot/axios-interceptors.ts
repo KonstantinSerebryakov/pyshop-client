@@ -76,6 +76,7 @@ export default boot(({ app, store }) => {
         return response;
       },
       (error) => {
+        console.log(error);
         if (error instanceof AxiosError) {
           const response = error.response;
           const status = response?.status;
