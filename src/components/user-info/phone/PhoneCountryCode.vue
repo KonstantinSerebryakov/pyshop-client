@@ -10,7 +10,7 @@
     :hide-bottom-space="true"
     color="primary"
     class="non-selectable ellipsis no-outline bg-grey-3 q-mx-none"
-    popup-content-style="height=16em; max-height=80vh; width: 200px"
+    popup-content-style="height=16em; max-height=80vh;"
     popup-content-class="text-bold non-selectable"
     v-model="selectedRef"
     :options="options"
