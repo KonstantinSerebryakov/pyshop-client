@@ -2,7 +2,7 @@ import { AxiosError, HttpStatusCode } from 'axios';
 import { UserInfoEntity } from '../entities';
 import { useUserStore } from 'src/stores/user-store';
 import mitt from 'mitt';
-import { ApiService } from './api.service';
+import { ApiService } from './ApiService';
 
 export enum EVENT_USER_INFO_STORE_API {
   FETCHED = 'FETCHED',

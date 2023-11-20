@@ -2,7 +2,7 @@ import { AxiosError, HttpStatusCode } from 'axios';
 import { URL_PARAM_IS_PUBLIC, URL_SIGNIN, URL_SIGNUP } from '@app/constants';
 import { EVENT_AUTH, eventBus } from 'src/boot/event-bus';
 import { useUserStore } from 'src/stores/user-store';
-import { ApiService } from './api.service';
+import { ApiService } from './ApiService';
 
 export class AuthApi {
   static async register(payload: { email: string; password: string }) {

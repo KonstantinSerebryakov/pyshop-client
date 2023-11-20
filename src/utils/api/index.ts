@@ -1,4 +1,4 @@
-export * from './api.service';
+export * from './ApiService';
 export * from './AuthApi';
-export * from './user-info.api';
+export * from './UserInfoApi';
 // afawf

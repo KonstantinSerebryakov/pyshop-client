@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import {
   EVENT_USER_INFO_STORE_API,
   UserInfoApi,
-} from 'src/utils/api/user-info.api';
+} from 'src/utils/api/UserInfoApi';
 import { UserInfoEntity } from 'src/utils/entities';
 import { ref } from 'vue';
 
