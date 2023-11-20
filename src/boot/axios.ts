@@ -17,20 +17,19 @@ declare module '@vue/runtime-core' {
 // for each client)
 function extractBaseUrl() {
   const env = process.env.NODE_ENV;
-  console.log(env);
   if (env === 'development') {
     return 'http://127.0.0.1:3333/api';
   }
+  return env;
   if (env === 'production') {
     return 'https://pyshop-konstantin-serebryakov-8ebd937f65cc.herokuapp.com/api';
   }
 }
 
-const api = axios.create({ baseURL: 'http://127.0.0.1:3333/api' }); // prettier-ignore
+const api = axios.create({ baseURL: extractBaseUrl() }); // prettier-ignore
 // const api = axios.create({baseURL:'https://pyshop-konstantin-serebryakov-8ebd937f65cc.herokuapp.com/api'}); // prettier-ignore
 
 export default boot(({ app, store }) => {
-  extractBaseUrl();
   extractBaseUrl();
   // for use inside Vue files (Options API) through this.$axios and this.$api
 
