@@ -14,11 +14,13 @@ export default boot(({ app, store, router }) => {
     }
   });
   eventBus.on(EVENT_AUTH.LOGOUT_SUCCESS, () => {
+    console.log('EVEENT_logout');
     const currentRoute = router.currentRoute.value.path;
     const path = `/signin?from=${currentRoute}`;
     router.push(path);
   });
   eventBus.on(EVENT_AUTH.REFRESH_TOKEN_UNVALIDATED, () => {
+    console.log('EVEENT_refreshUnvalid');
     const currentRoute = router.currentRoute.value.path;
     const path = `/signin?from=${currentRoute}`;
     router.push(path);
