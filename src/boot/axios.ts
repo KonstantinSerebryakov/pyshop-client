@@ -31,6 +31,7 @@ const api = axios.create({ baseURL: 'http://127.0.0.1:3333/api' }); // prettier-
 
 export default boot(({ app, store }) => {
   extractBaseUrl();
+  extractBaseUrl();
   // for use inside Vue files (Options API) through this.$axios and this.$api
 
   app.config.globalProperties.$axios = axios;
