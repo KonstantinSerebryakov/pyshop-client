@@ -73,6 +73,7 @@ export default boot(({ app, store }) => {
   const handleUnauthorizedResponseInterceptorId =
     app.config.globalProperties.$api.interceptors.response.use(
       (response) => {
+        console.log(response);
         return response;
       },
       (error) => {
