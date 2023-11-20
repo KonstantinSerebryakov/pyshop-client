@@ -1,29 +1,36 @@
-import { API_KEY, API_VERSION } from 'src/composables/ymap/constants';
 import { LngLat, YMapLocationRequest } from '@yandex/ymaps3-types';
 import {
   YMapCamera,
   YMapCenterLocation,
   YMapLocation,
 } from '@yandex/ymaps3-types/imperative/YMap';
-import { useCountryTimeZoneComposable } from 'src/composables/useTimeZoneComposable';
-import { useGecode } from './useGeocode';
+import { useGecode } from './geocoding/useGeocode';
 import mitt from 'mitt';
-import { useSearch } from './useSearch';
+import { useSearch } from './geocoding/useSearch';
 import { scriptLoaded } from 'src/boot/ymaps';
 
-export enum EVENT_MAP {
+export enum EVENT_YMAP {
   CENTER_CHANGED = 'CENTER_CHANGED',
   ADDRESS_FETCHED = 'ADDRESS_FETCHED',
   ADDRESS_CHANGED = 'ADDRESS_CHANGED',
+  DESTROY = 'DESTROY',
 }
+
+export type EventsYMap = {
+  [EVENT_YMAP.CENTER_CHANGED]: [number, number];
+  [EVENT_YMAP.ADDRESS_CHANGED]: string;
+  [EVENT_YMAP.ADDRESS_FETCHED]: string;
+  [EVENT_YMAP.DESTROY]: undefined;
+};
 
 export async function useYMap(htmlElement: HTMLElement, defaultLocation = '') {
   await scriptLoaded;
   await ymaps3.ready;
-  const emitter = mitt();
+
+  const emitter = mitt<EventsYMap>();
   const geocode = await useGecode(defaultLocation);
   const search = await useSearch();
-  const centerMarker = await getCenterMarker();
+  const centerMarker = await generateCenterMarker();
 
   async function setControls(map: InstanceType<typeof ymaps3.YMap>) {
     const { YMapControls } = ymaps3;
@@ -45,7 +52,7 @@ export async function useYMap(htmlElement: HTMLElement, defaultLocation = '') {
       onGeolocatePosition: (position) => {
         const x = position[0];
         const y = position[1];
-        emitter.emit(EVENT_MAP.CENTER_CHANGED, [x, y]);
+        emitter.emit(EVENT_YMAP.CENTER_CHANGED, [x, y]);
         map.setLocation({
           zoom: 18,
         });
@@ -58,11 +65,11 @@ export async function useYMap(htmlElement: HTMLElement, defaultLocation = '') {
   async function getMapDefaultLocation(): Promise<YMapLocationRequest> {
     let location = null as null | YMapLocationRequest;
 
-    async function generate() {
+    async function generateLocation() {
       const coords = await geocode.getCoordinates().then((data) => {
         geocode.getAddress().then((address) => {
           setTimeout(() => {
-            emitter.emit(EVENT_MAP.ADDRESS_FETCHED, address);
+            emitter.emit(EVENT_YMAP.ADDRESS_FETCHED, address);
           }, 0);
         });
         return data;
@@ -74,7 +81,7 @@ export async function useYMap(htmlElement: HTMLElement, defaultLocation = '') {
     }
 
     if (!location) {
-      location = (await generate()) as YMapLocationRequest;
+      location = (await generateLocation()) as YMapLocationRequest;
     }
     return location;
   }
@@ -98,7 +105,7 @@ export async function useYMap(htmlElement: HTMLElement, defaultLocation = '') {
     return map;
   }
 
-  async function getCenterMarker() {
+  async function generateCenterMarker() {
     const { YMapMarker } = ymaps3;
     const location = (await getMapDefaultLocation()) as YMapCenterLocation;
     const center = location.center;
@@ -145,7 +152,7 @@ export async function useYMap(htmlElement: HTMLElement, defaultLocation = '') {
         if (typed.type === 'drag') {
           const x = typed.location.center[0];
           const y = typed.location.center[1];
-          emitter.emit(EVENT_MAP.CENTER_CHANGED, [x, y]);
+          emitter.emit(EVENT_YMAP.CENTER_CHANGED, [x, y]);
         }
       },
       onUpdate: (updateObject) => {
@@ -166,13 +173,13 @@ export async function useYMap(htmlElement: HTMLElement, defaultLocation = '') {
   }
 
   async function setupEmitterEvents(map: InstanceType<typeof ymaps3.YMap>) {
-    emitter.on(EVENT_MAP.CENTER_CHANGED, (data: unknown) => {
+    emitter.on(EVENT_YMAP.CENTER_CHANGED, (data: unknown) => {
       const coords = data as [number, number];
       search.searchAddress(coords).then((address) => {
-        emitter.emit(EVENT_MAP.ADDRESS_FETCHED, address);
+        emitter.emit(EVENT_YMAP.ADDRESS_FETCHED, address);
       });
     });
-    emitter.on(EVENT_MAP.ADDRESS_CHANGED, (data: unknown) => {
+    emitter.on(EVENT_YMAP.ADDRESS_CHANGED, (data: unknown) => {
       const address = data as string;
       search.searchCoords(address).then((data) => {
         const coords = data as [number, number];
@@ -182,7 +189,7 @@ export async function useYMap(htmlElement: HTMLElement, defaultLocation = '') {
         });
       });
     });
-    emitter.on('destroy', () => {
+    emitter.on(EVENT_YMAP.DESTROY, () => {
       map.destroy();
     });
   }

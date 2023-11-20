@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import {
-  EVENT_USER_INFO_STORE,
+  EVENT_USER_INFO_STORE_API,
   UserInfoApi,
 } from 'src/utils/api/user-info.api';
 import { UserInfoEntity } from 'src/utils/entities';
@@ -21,17 +21,17 @@ export const useUserInfoStore = defineStore('user_info', () => {
     _api.setup(userId, id);
   }
 
-  _api.emitter.on(EVENT_USER_INFO_STORE.FETCHED, (payload) => {
+  _api.emitter.on(EVENT_USER_INFO_STORE_API.FETCHED, (payload) => {
     const entity = payload;
     _data.value = entity;
     setKeys(entity.userId ?? null, entity.id ?? null);
   });
-  _api.emitter.on(EVENT_USER_INFO_STORE.UPDATED, (payload) => {
+  _api.emitter.on(EVENT_USER_INFO_STORE_API.UPDATED, (payload) => {
     const entity = payload;
     _data.value = entity;
     setKeys(entity.userId ?? null, entity.id ?? null);
   });
-  _api.emitter.on(EVENT_USER_INFO_STORE.DELETED, (payload) => {
+  _api.emitter.on(EVENT_USER_INFO_STORE_API.DELETED, (payload) => {
     const entity = payload;
     _data.value = entity;
   });

@@ -40,7 +40,7 @@
 
 <script setup lang="ts">
 import NameInput from 'src/components/user-info/NameInput.vue';
-import PhoneInput from 'src/components/user-info/PhoneInput.vue';
+import PhoneInput from 'src/components/user-info/phone/PhoneInput.vue';
 import AddressInput from 'src/components/user-info/AddressInput.vue';
 import AboutInput from 'src/components/user-info/AboutInput.vue';
 import { onBeforeMount, onBeforeUnmount, ref } from 'vue';
@@ -49,6 +49,7 @@ import { useUserInfoStore } from 'src/stores/user-info-store';
 import { onBeforeRouteLeave } from 'vue-router';
 import { Notify } from 'quasar';
 import { UserInfoEntity } from 'src/utils/entities';
+import { throttle } from 'src/utils/utility/throttle';
 
 const nameRef = ref(null as null | InstanceType<typeof NameInput>);
 const phoneRef = ref(null as null | InstanceType<typeof PhoneInput>);
@@ -78,7 +79,7 @@ function getFormData(): IUserInfoUpdate {
   };
 }
 
-async function handleSubmit(evt: Event) {
+const handleSubmit = throttle(async (evt: Event) => {
   evt.preventDefault();
   if (!isDataReady.value) return;
   cancel.value();
@@ -88,18 +89,18 @@ async function handleSubmit(evt: Event) {
   const formDataEntity = new UserInfoEntity(formData);
 
   const apiPayload = await api.put(formDataEntity);
-  cancel.value = apiPayload.cancel;
-  const promise = apiPayload.promise.then((result) => {
+  cancel.value = apiPayload.abort;
+  apiPayload.apiPromise.then((result) => {
     if (result) {
       const status = result?.status;
-      const data = result?.data;
+      // const data = result?.data;
       if (status === 200) {
-        Notify.create({ type: 'info', message: 'submitted' });
+        Notify.create({ type: 'info', message: 'submitted', position: 'top' });
       }
     }
   });
-}
-function handleReset() {
+}, 500);
+const handleReset = throttle(() => {
   if (!isDataReady.value) return;
   cancel.value();
   if (userInfoStore.$state.data) {
@@ -107,25 +108,25 @@ function handleReset() {
   } else {
     clearInputValues();
   }
-  Notify.create({ type: 'info', message: 'changes resetted' });
-}
-async function handleDelete() {
+  Notify.create({ type: 'info', message: 'changes resetted', position: 'top' });
+}, 500);
+const handleDelete = throttle(async () => {
   if (!isDataReady.value) return;
   cancel.value();
 
   const apiPayload = await api.clear();
-  cancel.value = apiPayload.cancel;
-  const promise = apiPayload.promise.then((result) => {
+  cancel.value = apiPayload.abort;
+  apiPayload.apiPromise.then((result) => {
     if (result) {
       const status = result?.status;
-      const data = result?.data;
+      // const data = result?.data;
       if (status === 200) {
-        Notify.create({ type: 'info', message: 'cleared' });
+        Notify.create({ type: 'info', message: 'cleared', position: 'top' });
         clearInputValues();
       }
     }
   });
-}
+}, 500);
 
 function extractInputValuesFromStore() {
   const data = userInfoStore.$state.data;
@@ -146,8 +147,8 @@ onBeforeMount(() => {
   api
     .fetch()
     .then((apiPayload) => {
-      cancel.value = apiPayload.cancel;
-      return apiPayload.promise;
+      cancel.value = apiPayload.abort;
+      return apiPayload.apiPromise;
     })
     .then((result) => {
       const status = result?.status;

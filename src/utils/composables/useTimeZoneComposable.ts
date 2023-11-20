@@ -17,5 +17,6 @@ export function useCountryTimeZoneComposable() {
   return {
     getIso2Code: () => country?.id ?? null,
     getName: () => country?.name ?? null,
+    getTimeZones: () => country?.timezones ?? null,
   };
 }

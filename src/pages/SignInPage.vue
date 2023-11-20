@@ -37,15 +37,13 @@ import { Notify, QNotifyUpdateOptions } from 'quasar';
 import EmailInput from 'src/components/auth/EmailInput.vue';
 import PasswordInput from 'src/components/auth/PasswordInput.vue';
 import { AuthApi } from 'src/utils/api/auth.api';
-import { getCurrentInstance, onUnmounted, ref } from 'vue';
-
-const instance = getCurrentInstance();
-const globalProperties = instance?.appContext.config.globalProperties;
+import { throttle } from 'src/utils/utility/throttle';
+import { onUnmounted, ref } from 'vue';
 
 const emailInputRef = ref(null as InstanceType<typeof EmailInput> | null);
 const passwordInputRef = ref(null as InstanceType<typeof PasswordInput> | null);
-const cancelSubmit = ref(null as (() => void) | null);
 
+const cancelSubmit = ref(null as (() => void) | null);
 const dismissNotify = ref(
   null as null | ((props?: QNotifyUpdateOptions) => void)
 );
@@ -64,8 +62,9 @@ function getFormData() {
   };
 }
 
-async function handleSubmit(event: SubmitEvent | Event) {
+const handleSubmit = throttle(async (event: SubmitEvent | Event) => {
   event.preventDefault();
+  if (!validate()) return;
   handleCancel();
   dismissNotify.value = Notify.create({
     type: 'info',
@@ -75,23 +74,24 @@ async function handleSubmit(event: SubmitEvent | Event) {
     timeout: 0 // Set timeout to 0 for an indefinite loading notification
   });
 
-  if (!validate()) return;
-
   const data = getFormData();
   const axiosPair = await AuthApi.login(data);
-  cancelSubmit.value = axiosPair.cancel;
-  axiosPair.promise.then((response) => {
-    const dismiss = dismissNotify.value;
-    if (dismiss) dismiss();
-    if (!response) return;
-    const status = response.status;
-    // Test123@mail.ru
-    if (status === 404 || status === 401) {
-      emailInputRef.value?.showEmailInvalidError();
-      passwordInputRef.value?.showInvalidPasswordError();
-    }
-  });
-}
+  cancelSubmit.value = axiosPair.abort;
+  axiosPair.apiPromise
+    .then((response) => {
+      const dismiss = dismissNotify.value;
+      if (dismiss) dismiss();
+      if (!response) return;
+      const status = response.status;
+      if (status === 404 || status === 401) {
+        emailInputRef.value?.showEmailInvalidError();
+        passwordInputRef.value?.showInvalidPasswordError();
+      }
+    })
+    .catch((res) => {
+      console.log(res);
+    });
+}, 500);
 
 function handleCancel() {
   const dismiss = dismissNotify.value;

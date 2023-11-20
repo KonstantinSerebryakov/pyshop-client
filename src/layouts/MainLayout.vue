@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh Lpr lff">
+  <q-layout view="lhh Lpr lff">
     <q-header elevated class="bg-primary text-white" height-hint="98">
       <q-toolbar>
         <q-toolbar-title>
@@ -30,16 +30,11 @@
 
 <script lang="ts">
 import { EVENT_AUTH } from 'src/boot/event-bus';
-import QMenuProfile from 'src/components/QListProfileMenu.vue';
 import SocialsFooter from 'src/components/SocialsFooter.vue';
-// import { UserEntity } from 'src/entities';
-// import { getUserClonePromise } from 'src/stores/services/user-store.service';
 import { useUserStore } from 'src/stores/user-store';
-import { UserEntity } from 'src/utils/entities';
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
-  // components: { QMenuProfile },
   name: 'MainLayout',
   setup() {
     const userStore = useUserStore();

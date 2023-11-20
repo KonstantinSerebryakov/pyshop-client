@@ -26,7 +26,6 @@ const props = defineProps({
 
 const isUseDefaultSrc = ref(false);
 const countryCode = computed(() => props.code.toLocaleLowerCase());
-// const countryCode = props.code.toLocaleLowerCase();
 
 const src = computed(() => {
   return `flag-icons/${props.isSquare ? '1x1' : '4x3'}/${
@@ -35,6 +34,7 @@ const src = computed(() => {
 });
 
 onBeforeMount(() => {
+  // Note: validate icone image ref
   // const img = document.createElement('img');
   // img.addEventListener('error', (e: Event) => {
   //   isUseDefaultSrc.value = true;

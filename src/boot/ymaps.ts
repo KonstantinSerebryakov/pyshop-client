@@ -1,5 +1,8 @@
 import { boot } from 'quasar/wrappers';
-import { API_KEY, API_VERSION } from 'src/composables/ymap/constants';
+import {
+  YANDEX_API_KEY,
+  YANDEX_API_VERSION,
+} from 'src/components/user-info/ymap/constants';
 
 function generateScriptSrc(lang?: string) {
   // type lang = 'ru_RU' | 'ru_UA' | 'uk_UA' | 'tr_TR' | 'en_RU' | 'en_US' | 'he_IL' | 'en_IL'; // prettier-ignore
@@ -8,16 +11,16 @@ function generateScriptSrc(lang?: string) {
   const selectedLanguage = supportedLanguages.find((value)=>value === lang) ?? defaultLanguage; // prettier-ignore
 
   let src = 'https://api-maps.yandex.ru/';
-  src += API_VERSION;
+  src += YANDEX_API_VERSION;
   src += '/?apikey=';
-  src += API_KEY;
+  src += YANDEX_API_KEY;
   src += '&lang=';
   src += selectedLanguage;
   return src;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-let resolveLoaded = ((value: unknown) => {}) as (value: unknown) => void;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+let resolveLoaded = ((_value: unknown) => {/**/}) as (value: unknown) => void; //prettier-ignore
 
 function generateScript(lang?: string) {
   const script = document.createElement('script');
@@ -28,6 +31,7 @@ function generateScript(lang?: string) {
   return script;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default boot(({ app }) => {
   const script = generateScript();
   script.onload = resolveLoaded;
@@ -37,6 +41,7 @@ export default boot(({ app }) => {
   child.appendChild(script);
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const scriptLoaded = new Promise((resolve, reject) => {
   resolveLoaded = resolve;
 });

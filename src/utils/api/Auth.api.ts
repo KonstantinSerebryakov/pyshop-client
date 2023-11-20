@@ -1,41 +1,48 @@
-import { AxiosError } from 'axios';
-import { Notify } from 'quasar';
-import { api } from 'src/boot/axios';
+import { AxiosError, HttpStatusCode } from 'axios';
 import { URL_PARAM_IS_PUBLIC, URL_SIGNIN, URL_SIGNUP } from '@app/constants';
 import { EVENT_AUTH, eventBus } from 'src/boot/event-bus';
 import { useUserStore } from 'src/stores/user-store';
+import { ApiService } from './api.service';
 
 export class AuthApi {
   static async register(payload: { email: string; password: string }) {
     const URL = URL_SIGNUP;
 
-    const controller = new AbortController();
-    const cancel = () => {
-      controller.abort();
-    };
+    const apiServicePayload = ApiService.abortableRequest({
+      method: 'post',
+      url: URL,
+      params: { [URL_PARAM_IS_PUBLIC]: true },
+      data: payload,
+    });
 
-    const axiosPromise = api
-      .post(URL, payload, {
-        signal: controller.signal,
-        params: { [URL_PARAM_IS_PUBLIC]: true },
-      })
+    const apiPromise = apiServicePayload.requestPromise
       .then((response) => {
         const status = response.status;
         const data = response.data;
-        if (status === 201 && data) {
+        if (status === HttpStatusCode.Created && data) {
           // const user = new UserEntity();
           return { status: status, data: data };
         }
+        return { status: status, data: data };
       })
       .catch((error) => {
-        const response = error.response;
-        const status = response.status;
-        if (status === 409) {
-          return { status: status, data: null };
+        if (error instanceof AxiosError && error.response) {
+          const status = error.response.status;
+          const data = error.response.data;
+          switch (status) {
+            case HttpStatusCode.Conflict: {
+              break;
+            }
+          }
+          return { status: status, data: data ?? null };
         }
-        console.error(response.status + ': ' + response.data);
+        return null;
       });
-    return { promise: axiosPromise, cancel: cancel };
+
+    return {
+      abort: apiServicePayload.abort,
+      apiPromise: apiPromise,
+    };
   }
 
   private static extractDeviceId() {
@@ -46,34 +53,44 @@ export class AuthApi {
   static async login(payload: { email: string; password: string }) {
     const URL = URL_SIGNIN;
 
-    const controller = new AbortController();
-    const cancel = () => {
-      controller.abort();
-    };
+    const apiServicePayload = ApiService.abortableRequest({
+      method: 'post',
+      url: URL,
+      params: { [URL_PARAM_IS_PUBLIC]: true },
+      data: { ...payload, deviceId: this.extractDeviceId() },
+    });
 
-    const axiosPromise = api
-      .post(
-        URL,
-        { ...payload, deviceId: this.extractDeviceId() },
-        { signal: controller.signal, params: { [URL_PARAM_IS_PUBLIC]: true } }
-      )
+    const apiPromise = apiServicePayload.requestPromise
       .then((response) => {
         const status = response.status;
         const data = response.data;
-        if (status === 201 && data) {
+        if (status === HttpStatusCode.Created && data) {
           // const user = new UserEntity();
           eventBus.emit(EVENT_AUTH.LOGIN_SUCCESS, data);
           return { status: status, data: data };
         }
+        return { status: status, data: null };
       })
       .catch((error) => {
-        const response = error.response;
-        const status = response.status;
-        if (status === 404 || status === 401) {
-          return { status: status, data: null };
+        if (error instanceof AxiosError && error.response) {
+          const status = error.response.status;
+          const data = error.response.data;
+          switch (status) {
+            case HttpStatusCode.NotFound: {
+              break;
+            }
+            case HttpStatusCode.Unauthorized: {
+              break;
+            }
+          }
+          return { status: status, data: data ?? null };
         }
-        console.error(response.status + ': ' + response.data);
+        return Promise.resolve(null);
       });
-    return { promise: axiosPromise, cancel: cancel };
+
+    return {
+      abort: apiServicePayload.abort,
+      apiPromise: apiPromise,
+    };
   }
 }

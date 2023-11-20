@@ -1,23 +1,19 @@
-import { AxiosError } from 'axios';
-import { Notify } from 'quasar';
-import { api } from 'src/boot/axios';
-import { URL_SIGNIN, URL_SIGNUP } from '@app/constants';
-import { eventBus } from 'src/boot/event-bus';
+import { AxiosError, HttpStatusCode } from 'axios';
 import { UserInfoEntity } from '../entities';
-import { useUserInfoStore } from 'src/stores/user-info-store';
 import { useUserStore } from 'src/stores/user-store';
 import mitt from 'mitt';
+import { ApiService } from './api.service';
 
-export enum EVENT_USER_INFO_STORE {
+export enum EVENT_USER_INFO_STORE_API {
   FETCHED = 'FETCHED',
   UPDATED = 'UPDATED',
   DELETED = 'DELETED',
 }
 
 type EventsUsersInfoStore = {
-  [EVENT_USER_INFO_STORE.FETCHED]: UserInfoEntity;
-  [EVENT_USER_INFO_STORE.UPDATED]: UserInfoEntity;
-  [EVENT_USER_INFO_STORE.DELETED]: null;
+  [EVENT_USER_INFO_STORE_API.FETCHED]: UserInfoEntity;
+  [EVENT_USER_INFO_STORE_API.UPDATED]: UserInfoEntity;
+  [EVENT_USER_INFO_STORE_API.DELETED]: null;
 };
 
 export class UserInfoApi {
@@ -43,7 +39,7 @@ export class UserInfoApi {
       return;
     }
 
-    throw new Error('User ID is not properly setted!');
+    // throw new Error('User ID is not properly setted!');
   }
   private setupId(id: string | null) {
     this.id = id;
@@ -56,68 +52,90 @@ export class UserInfoApi {
   async fetch() {
     const URL = `users/${this.userId}/info`;
 
-    const controller = new AbortController();
-    const cancel = () => {
-      controller.abort();
-    };
+    const apiServicePayload = ApiService.abortableRequest({
+      method: 'get',
+      url: URL,
+    });
 
-    const axiosPromise = api
-      .get(URL)
+    const apiPromise = apiServicePayload.requestPromise
       .then((response) => {
         const status = response.status;
         const data = response.data;
-        if (status === 200 && data) {
+        if (status === HttpStatusCode.Ok && data) {
           const entity = new UserInfoEntity(data);
-          this.emitter.emit(EVENT_USER_INFO_STORE.FETCHED, entity);
+          this.emitter.emit(EVENT_USER_INFO_STORE_API.FETCHED, entity);
           return { status: status, data: entity };
         }
         return { status: status, data: null };
       })
       .catch((error) => {
-        if (error instanceof AxiosError) {
-          const response = error.response;
-          const status = response?.status;
-          if (status === 403 || status === 404) {
-            return { status: status, data: null };
+        if (error instanceof AxiosError && error.response) {
+          const status = error.response.status;
+          const data = error.response.data;
+          switch (status) {
+            case HttpStatusCode.Forbidden: {
+              break;
+            }
+            case HttpStatusCode.NotFound: {
+              break;
+            }
           }
+          return { status: status, data: data ?? null };
         }
         return null;
       });
 
-    return { promise: axiosPromise, cancel: cancel };
+    return {
+      abort: apiServicePayload.abort,
+      apiPromise: apiPromise,
+    };
   }
 
   async put(data: UserInfoEntity) {
     if (!this.userId || !this.id) throw new Error('Data must be fetched before update!'); // prettier-ignore
     const URL = `users/${this.userId}/info/${this.id}`;
 
-    const controller = new AbortController();
-    const cancel = () => {
-      controller.abort();
-    };
-    const axiosPromise = api
-      .put(URL, data.getUpdate(), { signal: controller.signal })
+    const apiServicePayload = ApiService.abortableRequest({
+      method: 'put',
+      url: URL,
+      data: data,
+    });
+
+    const apiPromise = apiServicePayload.requestPromise
       .then((response) => {
         const status = response.status;
         const data = response.data;
-        if ((status === 200 || status === 201) && data) {
+        if (
+          (status === HttpStatusCode.Ok || status === HttpStatusCode.Created) &&
+          data
+        ) {
           const entity = new UserInfoEntity(data);
-          this.emitter.emit(EVENT_USER_INFO_STORE.UPDATED, entity);
+          this.emitter.emit(EVENT_USER_INFO_STORE_API.UPDATED, entity);
           return { status: status, data: entity };
         }
         return { status: status, data: null };
       })
       .catch((error) => {
-        if (error instanceof AxiosError) {
-          const response = error.response;
-          const status = response?.status;
-          if (status === 403 || status === 409) {
-            return { status: status, data: null };
+        if (error instanceof AxiosError && error.response) {
+          const status = error.response.status;
+          const data = error.response.data;
+          switch (status) {
+            case HttpStatusCode.Forbidden: {
+              break;
+            }
+            case HttpStatusCode.Conflict: {
+              break;
+            }
           }
+          return { status: status, data: data ?? null };
         }
+        return null;
       });
 
-    return { promise: axiosPromise, cancel: cancel };
+    return {
+      abort: apiServicePayload.abort,
+      apiPromise: apiPromise,
+    };
   }
 
   async clear() {

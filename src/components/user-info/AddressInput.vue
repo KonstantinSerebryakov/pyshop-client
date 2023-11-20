@@ -42,9 +42,8 @@
   </q-dialog>
 </template>
 <script setup lang="ts">
-import YMap from '../user-info/YMap.vue';
-import { computed, onMounted, onUnmounted, ref } from 'vue';
-import { EVENT_USER_INFO_STORE, eventBus } from 'src/boot/event-bus';
+import YMap from './ymap/YMap.vue';
+import { computed, ref } from 'vue';
 import { ADDRESS_LENGTH_MAX } from '@app/constants';
 
 const data = ref(null as null | string);

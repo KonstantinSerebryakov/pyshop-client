@@ -1,15 +1,14 @@
-import { useCountryTimeZoneComposable } from 'src/composables/useTimeZoneComposable';
-import {
-  GeocodeApi,
-  IYandexGeocodeResponseFeature,
-} from 'src/utils/api/Geocode.api';
+import { useCountryTimeZoneComposable } from 'src/utils/composables/useTimeZoneComposable';
+import { GeocodeApi } from './Geocode.api';
+import { debounce } from 'quasar';
 
 export async function useGecode(defaultLocation = '') {
   const api = new GeocodeApi();
-  let _address = (() => {
+
+  let _address = await (async () => {
+    if (defaultLocation.length > 0) return defaultLocation;
     const timeZone = useCountryTimeZoneComposable();
     const name = timeZone.getName();
-    if (defaultLocation.length > 0) return defaultLocation;
     return name ?? 'London';
   })();
   const _coords = await (async () => {
@@ -25,8 +24,7 @@ export async function useGecode(defaultLocation = '') {
     });
   })();
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  let cancel = (() => {}) as () => void;
+  let cancel = (() => {/* */}) as () => void; // prettier-ignore
   let promise = null as Promise<typeof _coords | typeof _address> | null;
 
   async function getCoordinates(address?: string) {
@@ -72,5 +70,12 @@ export async function useGecode(defaultLocation = '') {
     return promise as Promise<string>;
   }
 
-  return { getCoordinates, getAddress };
+  return {
+    getCoordinates,
+    getAddress,
+  };
+  // return {
+  //   getCoordinates: debounce(getCoordinates, 300),
+  //   getAddress: debounce(getAddress, 300),
+  // };
 }

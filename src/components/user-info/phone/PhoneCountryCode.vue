@@ -37,13 +37,13 @@
 </template>
 
 <script setup lang="ts">
-import CountryImg from 'src/components/user-info/CountryImg.vue';
-import CountryIcon from 'src/components/user-info/CountryIcon.vue';
+import CountryImg from './CountryImg.vue';
+import CountryIcon from './CountryIcon.vue';
 import { computed, onBeforeMount, readonly, ref, watch } from 'vue';
 import { getCountries } from 'libphonenumber-js';
 import { QSelect } from 'quasar';
-import { useCountryTimeZoneComposable } from '../../composables/useTimeZoneComposable';
 import { CountryCode } from 'countries-and-timezones';
+import { useCountryTimeZoneComposable } from 'src/utils/composables/useTimeZoneComposable';
 
 const props = defineProps({
   code: {
@@ -65,11 +65,13 @@ const selectedRef = ref(options[0]);
 const propsCode = computed(() => {
   return props.code?.toUpperCase() ?? null;
 });
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 watch(propsCode, (newValue, oldValue) => {
   if (newValue) {
     selectedRef.value = newValue;
   }
 });
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 watch(selectedRef, (newValue, oldValue) => {
   if (newValue !== propsCode.value) {
     emit('selected', newValue);
@@ -90,3 +92,4 @@ defineExpose({
 });
 </script>
 <style scoped></style>
+../../../utils/composables/useTimeZoneComposable
