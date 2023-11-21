@@ -89,7 +89,7 @@ const handleSubmit = throttle(async (event: SubmitEvent | Event) => {
       }
     })
     .catch((res) => {
-      console.log(res);
+      //
     });
 }, 500);
 

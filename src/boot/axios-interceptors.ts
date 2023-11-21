@@ -73,11 +73,9 @@ export default boot(({ app, store }) => {
   const handleUnauthorizedResponseInterceptorId =
     app.config.globalProperties.$api.interceptors.response.use(
       (response) => {
-        console.log(response);
         return response;
       },
       (error) => {
-        console.log(error);
         if (error instanceof AxiosError) {
           const response = error.response;
           const status = response?.status;

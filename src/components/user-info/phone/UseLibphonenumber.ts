@@ -58,13 +58,11 @@ export function useLibphonenumber() {
       return;
     }
     if (!isValidPhoneNumber(value)) {
-      console.log('number is not valid');
       return;
     }
     const number = parsePhoneNumber(value);
     const code = number.country;
     if (!code || !isSupportedCountry(code)) {
-      console.log('number is not supported');
       return;
     }
     countryCode.value = code;

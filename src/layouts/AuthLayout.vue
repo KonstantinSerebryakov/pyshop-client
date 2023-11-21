@@ -18,7 +18,7 @@ export default defineComponent({
   },
   methods: {},
   mounted() {
-    console.log(this.$q.screen.gt);
+    // console.log(this.$q.screen.gt);
   }
 });
 </script>

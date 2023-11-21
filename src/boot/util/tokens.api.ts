@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 import { EVENT_AUTH, eventBus } from '../event-bus';
 import { IRefreshTokensResponsePayload } from 'src/utils/interfaces';
-import { URL_BASE_HEROKU, URL_BASE_LOCAL, URL_REFRESH } from '@app/constants';
+import { URL_REFRESH } from '@app/constants';
 import { api } from '../axios';
 
 export class JwtTokensApi {
