@@ -3,7 +3,8 @@
 Quasar client for [task](https://jl.pyshop.ru/tasks/typescript-dev/).
 
 **_Note_**: It is not relevant to Delete user info with 1:1 relation, so it simply clears fields, reducing requests and fixing rows track changes problem.
-**Note**: Because no email confirmation is needed, when user successfully signup, system automatically sends authentification request and navigate user to the main page.
+**_Note_**: Because no email confirmation is needed, when user successfully signup, system automatically sends authentification request and navigate user to the main page.
+**_Note:_** CI/CD configured with Github Actions: client automatically injected from main branch to server and to heroku;
 
 ### Features
 
