@@ -16,12 +16,12 @@ const props = defineProps({
     validator: (value: string) => {
       const regExp = new RegExp(/^[A-Za-z]{2}$/);
       return regExp.test(value);
-    }
+    },
   },
   isSquare: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
 const isDefaultSrc = ref(false);

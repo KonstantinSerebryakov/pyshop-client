@@ -121,6 +121,6 @@ defineExpose({
   validate,
   value: readonly(data),
   showEmailBusyError,
-  showEmailInvalidError
+  showEmailInvalidError,
 });
 </script>

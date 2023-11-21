@@ -41,8 +41,8 @@ const emit = defineEmits(['picked']);
 
 const props = defineProps({
   defaultValue: {
-    type: String
-  }
+    type: String,
+  },
 });
 
 function searchAddress() {

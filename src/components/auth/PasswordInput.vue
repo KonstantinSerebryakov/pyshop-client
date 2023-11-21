@@ -17,7 +17,7 @@ import { computed, onMounted, readonly, ref, watch } from 'vue';
 import {
   PASSWORD_LENGTH_MAX,
   PASSWORD_LENGTH_MIN,
-  PASSWORD_REGEXP
+  PASSWORD_REGEXP,
 } from '@app/constants';
 import { useInputMessage } from 'src/utils/composables/useInputMessage';
 
@@ -87,6 +87,6 @@ onMounted(() => {
 defineExpose({
   validate,
   value: readonly(data),
-  showInvalidPasswordError
+  showInvalidPasswordError,
 });
 </script>

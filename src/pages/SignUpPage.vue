@@ -16,7 +16,7 @@
             <q-btn
               :to="{
                 path: '/signin',
-                query: $route.query // Include the existing query parameters
+                query: $route.query, // Include the existing query parameters
               }"
               label="Sign In"
               flat
@@ -59,7 +59,7 @@ function validate() {
 function getFormData() {
   return {
     email: emailInputRef.value?.value ?? '',
-    password: passwordInputRef.value?.value ?? ''
+    password: passwordInputRef.value?.value ?? '',
   };
 }
 
@@ -72,7 +72,7 @@ const handleSubmit = throttle(async (event: SubmitEvent | Event) => {
     spinner: true,
     message: 'Authentificating...',
     position: 'top',
-    timeout: 0 // Set timeout to 0 for an indefinite loading notification
+    timeout: 0, // Set timeout to 0 for an indefinite loading notification
   });
 
   const data = getFormData();
@@ -95,7 +95,7 @@ async function handleSignUpSuccess(data: ILoginQueryPayload) {
   Notify.create({
     type: 'info',
     message: 'User successfully created.',
-    position: 'top'
+    position: 'top',
   });
   // OR navigate to signin
   AuthApi.login(data);

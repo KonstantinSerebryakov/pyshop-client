@@ -36,6 +36,6 @@ defineExpose({
   validate,
   value: readonly(data),
   setValue: setValue,
-  clearValue: clearValue
+  clearValue: clearValue,
 });
 </script>

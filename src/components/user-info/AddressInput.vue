@@ -76,6 +76,6 @@ defineExpose({
     return data.value?.trim() ?? null;
   }),
   setValue: setValue,
-  clearValue: clearValue
+  clearValue: clearValue,
 });
 </script>

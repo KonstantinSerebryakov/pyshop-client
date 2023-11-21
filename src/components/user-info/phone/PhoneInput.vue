@@ -99,7 +99,7 @@ defineExpose({
   validate,
   value: readonly(fullPhoneNumber),
   setValue: setValue,
-  clearValue: clearValue
+  clearValue: clearValue,
 });
 </script>
 <style scoped></style>

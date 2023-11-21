@@ -16,7 +16,7 @@
             <q-btn
               :to="{
                 path: '/signup',
-                query: $route.query // Include the existing query parameters
+                query: $route.query, // Include the existing query parameters
               }"
               label="Sign Up"
               flat
@@ -58,7 +58,7 @@ function validate() {
 function getFormData() {
   return {
     email: emailInputRef.value?.value ?? '',
-    password: passwordInputRef.value?.value ?? ''
+    password: passwordInputRef.value?.value ?? '',
   };
 }
 
@@ -71,7 +71,7 @@ const handleSubmit = throttle(async (event: SubmitEvent | Event) => {
     spinner: true,
     message: 'Authorizing...',
     position: 'top',
-    timeout: 0 // Set timeout to 0 for an indefinite loading notification
+    timeout: 0, // Set timeout to 0 for an indefinite loading notification
   });
 
   const data = getFormData();

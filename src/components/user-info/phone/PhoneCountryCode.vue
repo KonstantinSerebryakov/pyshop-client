@@ -52,8 +52,8 @@ const props = defineProps({
       // Allow an empty string or a valid two-letter code
       const regExp = new RegExp(/^$|^[A-Za-z]{2}$/);
       return regExp.test(value);
-    }
-  }
+    },
+  },
 });
 
 const emit = defineEmits(['selected']);
@@ -88,7 +88,7 @@ function select(code: CountryCode) {
 }
 defineExpose({
   selected: readonly(selectedRef),
-  select: select
+  select: select,
 });
 </script>
 <style scoped></style>

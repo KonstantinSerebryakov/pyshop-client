@@ -1,41 +1,55 @@
-# Quasar App (pyshop-konstantin-serebryakov-client)
+# Description
 
-A Quasar Project
+Quasar client for [task](https://jl.pyshop.ru/tasks/typescript-dev/).
+
+**_Note_**: It is not relevant to Delete user info with 1:1 relation, so it simply clears fields, reducing requests and fixing rows track changes problem.
+**Note**: Because no email confirmation is needed, when user successfully signup, system automatically sends authentification request and navigate user to the main page.
+
+### Features
+
+- Non blocking.
+- Layout designed for all screens.
+- Authentification:
+  - JWT with implementation of refresh tokens
+  - tokens logic handled by axios interceptors.
+    - refresh token refreshes with access token for security purposes
+- Pinia storage:
+  - synchronization with browser storages and server.
+- Axios with interceptors
+- Custom throttling and debouncing
+- Phone input:
+  - npm package [flag-icons](https://www.npmjs.com/package/flag-icons) used for country icons.
+  - npm package [libphonenumber-js](https://www.npmjs.com/package/libphonenumber-js) used for validating phone numbers.
+- Yandex Maps for picking address
+  - **!Warning**: may not work if daily limit of free api key calls reached
+  - **Note**: newest version [api **V3**](https://yandex.ru/dev/jsapi30/doc/ru/dg/concepts/typescript) used. It is not stable and may have bugs. During development I sent some bug reports and they have been fixed.
 
 ## Install the dependencies
+
 ```bash
-yarn
-# or
 npm install
 ```
 
 ### Start the app in development mode (hot-code reloading, error reporting, etc.)
+
 ```bash
 quasar dev
 ```
 
-
 ### Lint the files
+
 ```bash
-yarn lint
-# or
 npm run lint
 ```
 
-
 ### Format the files
+
 ```bash
-yarn format
-# or
 npm run format
 ```
 
-
-
 ### Build the app for production
-```bash
-quasar build
-```
 
-### Customize the configuration
-See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
+```bash
+npm run build
+```

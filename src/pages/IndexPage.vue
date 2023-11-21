@@ -75,7 +75,7 @@ function getFormData(): IUserInfoUpdate {
     name: nameRef.value?.value ?? null,
     phone: phoneRef.value?.value ?? null,
     address: addressRef.value?.value ?? null,
-    about: aboutRef.value?.value ?? null
+    about: aboutRef.value?.value ?? null,
   };
 }
 

@@ -19,7 +19,7 @@ export default defineComponent({
   methods: {},
   mounted() {
     // console.log(this.$q.screen.gt);
-  }
+  },
 });
 </script>
 <style scoped></style>

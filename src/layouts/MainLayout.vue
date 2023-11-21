@@ -44,10 +44,10 @@ export default defineComponent({
   methods: {
     handleLogout() {
       this.$eventBus.emit(EVENT_AUTH.LOGOUT_SUCCESS);
-    }
+    },
   },
   computed: {},
-  components: { SocialsFooter }
+  components: { SocialsFooter },
 });
 </script>
 <style scoped lang="scss">
