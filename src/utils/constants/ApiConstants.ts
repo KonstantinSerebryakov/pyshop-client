@@ -6,6 +6,7 @@ export const URL_BASE_HEROKU =
 // auth
 export const URL_SIGNIN = '/auth/signin';
 export const URL_SIGNUP = '/auth/signup';
+export const URL_LOGOUT = '/auth/logout';
 export const URL_REFRESH = '/auth/refresh';
 export const URL_PARAM_IS_PUBLIC = 'is_target_endpoint_public';
 

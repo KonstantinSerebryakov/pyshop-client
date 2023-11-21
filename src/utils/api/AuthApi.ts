@@ -93,4 +93,30 @@ export class AuthApi {
       apiPromise: apiPromise,
     };
   }
+
+  static logout(refreshToken?: string) {
+    if (!refreshToken) return;
+    const URL = URL_SIGNIN;
+
+    const apiServicePayload = ApiService.abortableRequest({
+      method: 'post',
+      url: URL,
+      params: { [URL_PARAM_IS_PUBLIC]: true },
+      data: { token: refreshToken },
+    });
+
+    const apiPromise = apiServicePayload.requestPromise.catch((error) => {
+      if (error instanceof AxiosError && error.response) {
+        const status = error.response.status;
+        const data = error.response.data;
+        return { status: status, data: data ?? null };
+      }
+      return Promise.resolve(null);
+    });
+
+    return {
+      abort: apiServicePayload.abort,
+      apiPromise: apiPromise,
+    };
+  }
 }

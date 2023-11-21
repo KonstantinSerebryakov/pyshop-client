@@ -7,6 +7,7 @@ import {
 } from 'src/utils/interfaces';
 import { UserEntity } from 'src/utils/entities';
 import { useUserInfoStore } from 'src/stores/user-info-store';
+import { AuthApi } from 'src/utils/api';
 
 export default boot(({ app, store, router }) => {
   const eventBus = app.config.globalProperties.$eventBus;
@@ -24,6 +25,7 @@ export default boot(({ app, store, router }) => {
     userStore.$state.accessToken = { ...typedPayload.access_token, iat: iat };
   });
   eventBus.on(EVENT_AUTH.LOGOUT_SUCCESS, () => {
+    AuthApi.logout(userStore.refreshToken?.token);
     userStore.clear();
     userInfoStore.clear();
     sessionStorage.clear();
