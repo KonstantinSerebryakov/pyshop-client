@@ -2,6 +2,7 @@ import axios, { AxiosInstance } from 'axios';
 import { EVENT_AUTH, eventBus } from '../event-bus';
 import { IRefreshTokensResponsePayload } from 'src/utils/interfaces';
 import { URL_BASE_HEROKU, URL_BASE_LOCAL, URL_REFRESH } from '@app/constants';
+import { api } from '../axios';
 
 export class JwtTokensApi {
   constructor() {
@@ -9,7 +10,7 @@ export class JwtTokensApi {
   }
 
   async fetchRefresh(refreshToken: string) {
-    const baseURL = URL_BASE_LOCAL;
+    const baseURL = api.defaults.baseURL;
     // const baseURL = URL_BASE_HEROKU;
     const URL = baseURL + URL_REFRESH;
 

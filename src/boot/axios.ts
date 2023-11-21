@@ -26,6 +26,7 @@ function extractBaseUrl() {
 }
 
 const api = axios.create({ baseURL: extractBaseUrl() }); // prettier-ignore
+// api.defaults.baseURL
 // const api = axios.create({baseURL:'https://pyshop-konstantin-serebryakov-8ebd937f65cc.herokuapp.com/api'}); // prettier-ignore
 
 export default boot(({ app, store }) => {
