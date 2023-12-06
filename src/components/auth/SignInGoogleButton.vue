@@ -59,7 +59,7 @@ async function signInWithGoogle() {
   url.searchParams.append('response_type', 'code');
   url.searchParams.append(
     'redirect_uri',
-    'http://localhost:3333/api/auth/google/callback'
+    'https://pyshop-konstantin-serebryakov-8ebd937f65cc.herokuapp.com/api/auth/google/callback'
   );
   url.searchParams.append(
     'client_id',
