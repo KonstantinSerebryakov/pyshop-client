@@ -63,7 +63,7 @@ async function signInWithGoogle() {
   );
   url.searchParams.append(
     'client_id',
-    '614117654748-9r8lkv1kt548bh5o787s73oqrelud4m3.apps.googleusercontent.com'
+    '614117654748-dj87eb7khv1qts67imu3uglonfpt72bm.apps.googleusercontent.com'
   );
   url.searchParams.append('access_type', 'offline');
   // url.searchParams.append('access_type', 'online');
