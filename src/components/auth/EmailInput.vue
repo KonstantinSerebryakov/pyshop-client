@@ -119,8 +119,10 @@ onMounted(() => {
 
 defineExpose({
   validate,
-  value: readonly(data),
+  value: computed(() => {
+    return data.value.trim();
+  }),
   showEmailBusyError,
-  showEmailInvalidError,
+  showEmailInvalidError
 });
 </script>

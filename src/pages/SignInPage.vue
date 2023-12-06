@@ -1,8 +1,8 @@
 <template>
   <q-page class="window-height">
     <div class="col-12 row full-height content-around">
-      <q-form class="col-12" @submit="handleSubmit">
-        <q-card class="auth-card col-12">
+      <q-card class="auth-card col-12">
+        <q-form class="col-12" @submit="handleSubmit">
           <q-card-section class="q-px-md col-12">
             <div class="text-h6 text-center">Login</div>
             <email-input ref="emailInputRef" class="q-mt-lg" />
@@ -16,7 +16,7 @@
             <q-btn
               :to="{
                 path: '/signup',
-                query: $route.query, // Include the existing query parameters
+                query: $route.query // Include the existing query parameters
               }"
               label="Sign Up"
               flat
@@ -26,8 +26,14 @@
               color="purple"
             />
           </q-card-section>
-        </q-card>
-      </q-form>
+        </q-form>
+        <q-separator :inset="true" />
+        <div class="text-h6 text-center">OR</div>
+        <q-separator :inset="true" />
+        <q-card-section class="row justify-center align-center">
+          <sign-in-google-button class="q-mx-auto"></sign-in-google-button>
+        </q-card-section>
+      </q-card>
     </div>
   </q-page>
 </template>
@@ -36,6 +42,7 @@
 import { Notify, QNotifyUpdateOptions } from 'quasar';
 import EmailInput from 'src/components/auth/EmailInput.vue';
 import PasswordInput from 'src/components/auth/PasswordInput.vue';
+import SignInGoogleButton from 'src/components/auth/SignInGoogleButton.vue';
 import { AuthApi } from 'src/utils/api/AuthApi';
 import { throttle } from 'src/utils/utility/throttle';
 import { onUnmounted, ref } from 'vue';
@@ -58,7 +65,7 @@ function validate() {
 function getFormData() {
   return {
     email: emailInputRef.value?.value ?? '',
-    password: passwordInputRef.value?.value ?? '',
+    password: passwordInputRef.value?.value ?? ''
   };
 }
 
@@ -71,7 +78,7 @@ const handleSubmit = throttle(async (event: SubmitEvent | Event) => {
     spinner: true,
     message: 'Authorizing...',
     position: 'top',
-    timeout: 0, // Set timeout to 0 for an indefinite loading notification
+    timeout: 0 // Set timeout to 0 for an indefinite loading notification
   });
 
   const data = getFormData();

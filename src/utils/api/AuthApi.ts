@@ -1,5 +1,10 @@
 import { AxiosError, HttpStatusCode } from 'axios';
-import { URL_PARAM_IS_PUBLIC, URL_SIGNIN, URL_SIGNUP } from '@app/constants';
+import {
+  URL_LOGOUT,
+  URL_PARAM_IS_PUBLIC,
+  URL_SIGNIN,
+  URL_SIGNUP,
+} from '@app/constants';
 import { EVENT_AUTH, eventBus } from 'src/boot/event-bus';
 import { useUserStore } from 'src/stores/user-store';
 import { ApiService } from './ApiService';
@@ -96,7 +101,7 @@ export class AuthApi {
 
   static logout(refreshToken?: string) {
     if (!refreshToken) return;
-    const URL = URL_SIGNIN;
+    const URL = URL_LOGOUT;
 
     const apiServicePayload = ApiService.abortableRequest({
       method: 'post',

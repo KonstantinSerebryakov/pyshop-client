@@ -4,7 +4,6 @@ import { URL_PARAM_IS_PUBLIC, URL_REFRESH } from '@app/constants';
 import { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
 export default boot(({ app, store }) => {
-  const api = app.config.globalProperties.$api;
   const tokensService = new JwtTokensService();
 
   //
